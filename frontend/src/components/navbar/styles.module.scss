@@ -1,0 +1,35 @@
+.main{
+    margin: 0%;
+    padding: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #02343F
+}
+
+.logo{
+    padding: 5px;
+    height: 35%;
+    width: 35%;
+    margin-left: 10px;
+}   
+
+.leftPanel {
+    display: flex;
+    gap: 2rem;
+}
+
+.rightPanel{
+    .btn{
+        width: 8rem;
+        font-size: larger;
+        background-color: #F0EDCC;
+        padding: 15px;
+        border-radius: 10px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: bold;
+    }
+    .username{
+        color: white;
+    }
+}
