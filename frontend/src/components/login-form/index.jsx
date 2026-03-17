@@ -29,7 +29,8 @@ const LoginForm = ({ onSubmit }) => {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
+          placeholder="Enter email"
+          minLength={8}
         />
       </div>
 
@@ -40,7 +41,8 @@ const LoginForm = ({ onSubmit }) => {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
+          placeholder="Enter password"
+          minLength={8}
         />
       </div>
 

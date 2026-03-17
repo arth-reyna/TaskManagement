@@ -1,19 +1,27 @@
 import { roles } from "../constants/roles";
+import About from "../pages/about";
+import Profile from "../pages/profile";
+import Tasks from "../pages/tasks";
 
 export const routesData = [
   {
     path: "tasks",
-    element: <h1>task page</h1>,
+    element: <Tasks />,
     role: [roles.user],
   },
   {
     path: "profile",
-    element: <h1>profile page</h1>,
+    element: <Profile />,
     role: [roles.user],
   },
   {
     path: "logout",
     element: <h1>logout page</h1>,
+    role: [roles.user, roles.admin],
+  },
+  {
+    path: "about",
+    element: <About />,
     role: [roles.user, roles.admin],
   },
   {

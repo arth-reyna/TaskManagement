@@ -3,9 +3,9 @@ import Sidebar from "../../components/sidebar";
 import { Outlet } from "react-router-dom";
 import styles from "./styles.module.scss";
 
-const Dashboard = () => {
+const MainLayout = () => {
   return (
-    <div className={styles.dashboard}>
+    <div className={styles.mainbody}>
       <Navbar />
       <div className={styles.content}>
         <Sidebar />
@@ -17,4 +17,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default MainLayout;

@@ -30,12 +30,12 @@ const Navbar = () => {
   return (
     <div className={styles.main}>
       <div className={styles.leftPanel}>
-        <Image src={logo} alt="logo" className={styles.logo} />
+        <Image src={logo} alt="logo" className={styles.logo}  />
       </div>
 
       <div className={styles.rightPanel}>
         {isLoggedIn ? (
-          <p className={styles.username}>`Welcome ${email}!`</p>
+          <p className={styles.username}>Welcome ${email}!  </p>
         ) : (
           <Button props={{ text: "Login", onClick: handleLoginButtonClick, styles: styles.btn }} />
         )}

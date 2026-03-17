@@ -1,0 +1,39 @@
+h1 {
+  text-align: center;
+}
+
+.addTaskBody {
+  display: block;
+  margin: 3rem;
+  padding: 1rem;
+
+  .addtask {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    margin: 10px;
+    
+
+    .textbox {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+  }
+}
+
+.viewTask{
+  padding: 20px;
+
+  .addtask{
+    font-size: large;
+    margin: 10px 30px;  
+    
+    li{
+      font-weight: 500;
+      font-size: larger;
+    }
+  }
+}

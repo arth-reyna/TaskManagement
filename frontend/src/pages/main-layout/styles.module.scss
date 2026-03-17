@@ -1,22 +1,22 @@
-.dashboard{
+.mainbody{
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
 }
 
 .content{
+    min-width: 20%;
     display: flex;
     flex: 1;
     overflow: hidden;
 }
 
 .outlet {
+    min-width: 80%;
     min-height: 100%;
-    // margin-left: 10px;
     flex:1;
     padding: 1.5rem;
-    // border-radius: 10px;
-    // margin-top: 6px;
     background-color: #F0EDCC;
     
 }
