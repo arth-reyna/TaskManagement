@@ -1,0 +1,26 @@
+.mainBody{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+
+    .header{
+        padding: 5rem;
+        border-radius: 40px;
+        text-align: center;
+        background-color: #02343F;
+        
+
+        h1{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 60px;
+            padding: 20px;
+            color: #F0EDCC;
+        }
+
+        p{
+            font-weight: 400;
+            font-style: italic;
+            color: #F0EDCC;
+        }
+    }
+}
