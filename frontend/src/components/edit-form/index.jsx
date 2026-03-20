@@ -4,8 +4,8 @@ import TextBox from "../text-box";
 import styles from "./styles.module.scss";
 
 const EditTask = ({ task, onClose, onSave }) => {
-  const [title, setTitle] = useState(task.title);
-  const [description, setDescription] = useState(task.description);
+  const [title, setTitle] = useState(task.task_title);
+  const [description, setDescription] = useState(task.task_description);
   const [error, setError] = useState(null);
 
   const handleSubmit = () => {

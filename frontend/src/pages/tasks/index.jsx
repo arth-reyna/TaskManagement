@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/button";
 import TextBox from "../../components/text-box";
 import Modal from "../../components/modal";
@@ -13,21 +13,55 @@ const Tasks = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingTaskIdx, setEditingTaskIdx] = useState(null);
 
-  const handleAddTask = () => {
-    if (taskName.length <= 4 || taskDescription.length <= 10) {
-      setError("Title must be > 4 chars and description > 10 chars.");
-      return;
+  const handleAddTask = async () => {
+    try {
+      if (taskName.length <= 4 || taskDescription.length <= 10) {
+        setError("Title must be > 4 chars and description > 10 chars.");
+        return;
+      }
+      const result = await fetch("http://localhost:5000/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: taskName,
+          description: taskDescription,
+          status: true,
+        }),
+      });
+
+      if (!result.ok) throw new Error("HTTP Error");
+
+      const data = await result.json();
+      console.log("data: ", data);
+      console.log("Tasks: ", tasks);
+      setTasks((prev) => [...prev, data.data]);
+
+      setTaskName("");
+      setTaskDescription("");
+      setError(null);
+    } catch (error) {
+      console.error(error);
     }
-    setTasks([
-      ...tasks,
-      { title: taskName, description: taskDescription, status: true },
-    ]);
-    setTaskName("");
-    setTaskDescription("");
-    setError(null);
   };
 
-  const handleToggle = (idx) => {
+  const handleToggle = async (idx) => {
+    const taskToToggle = tasks[idx];
+    const id = taskToToggle._id;
+
+    const result = await fetch(`http://localhost:5000/api/task/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!result.ok) throw new Error("Error Updating Status");
+
+    const data = await result.json();
+    console.log("data: ", data);
+
     setTasks((prev) =>
       prev.map((task, i) =>
         i === idx ? { ...task, status: !task.status } : task,
@@ -35,9 +69,42 @@ const Tasks = () => {
     );
   };
 
-  const handleDelete = (idx) => {
+  const handleDelete = async (idx) => {
+    const taskToDelete = tasks[idx];
+    const taskId = taskToDelete._id;
+
+    const result = await fetch(`http://localhost:5000/api/task/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!result.ok) throw new Error("Unable to Delete Task");
+
     setTasks((prev) => prev.filter((_, i) => i !== idx));
+    setError(null);
   };
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const result = await fetch("http://localhost:5000/api/tasks", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!result.ok) throw new Error("Unable to fetch tasks");
+
+      const data = await result.json();
+      setTasks(data.data);
+
+      console.log("All Tasks: ", tasks);
+    };
+
+    fetchTasks();
+  }, []);
 
   const handleEdit = (idx) => {
     setEditingTaskIdx(idx);
@@ -49,20 +116,42 @@ const Tasks = () => {
     setEditingTaskIdx(null);
   };
 
-  const handleEditSave = (updatedData) => {
-    setTasks((prev) =>
-      prev.map((task, i) =>
-        i === editingTaskIdx
-          ? {
-              ...task,
-              title: updatedData.title,
-              description: updatedData.description,
-            }
-          : task,
-      ),
-    );
+  const handleEditSave = async (updatedData) => {
+    const taskToEdit = tasks[editingTaskIdx];
+    const taskId = taskToEdit._id;
+    console.log("Edit Task ID: ", taskId);
+
+    const result = await fetch(`http://localhost:5000/api/task/${taskId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    });
+    if (!result.ok) throw new Error("Unable to update task details");
+
+    const fetchResponse = await fetch("http://localhost:5000/api/tasks", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await fetchResponse.json();
+    setTasks(data.data);
+    // setTasks((prev) =>
+    //   prev.map((task, i) =>
+    //     i === editingTaskIdx
+    //       ? {
+    //           ...task,
+    //           title: updatedData.title,
+    //           description: updatedData.description,
+    //         }
+    //       : task,
+    //   ),
+    // );
     handleEditClose();
   };
+
   return (
     <div className={styles.page}>
       <h1>Add Task</h1>
@@ -114,9 +203,9 @@ const Tasks = () => {
               {tasks.map((task, idx) => (
                 <tr key={idx}>
                   <td>{idx + 1}</td>
-                  <td>{task.title}</td>
-                  <td>{task.description}</td>
-                  <td>{task.status ? "Completed" : "Pending"}</td>
+                  <td>{task.task_title}</td>
+                  <td>{task.task_description}</td>
+                  <td>{task.status ? "Pending" : "Completed"}</td>
                   <td className={styles.actions}>
                     <Button
                       props={{
