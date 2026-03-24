@@ -6,11 +6,11 @@ import {
 } from "../utils/db.helper.js";
 import { Task } from "../models/tasks.js";
 
-export const getTasksBL = async () => {
+export const getTasksBL = async (userId) => {
   try {
     const data = await find({
       model: Task,
-      filter: {},
+      filter: { createdBy: userId },
     });
 
     return data;
@@ -21,14 +21,14 @@ export const getTasksBL = async () => {
 
 export const postTaskBL = async (data) => {
   try {
-    const { title, description, status } = data;
-    console.log("BL Data: ", data);
+    const { title, description, status, createdBy } = data;
     const result = await insertOne({
       model: Task,
       filter: {
         task_title: title,
         task_description: description,
         status: status,
+        createdBy: createdBy,
       },
     });
 
@@ -60,7 +60,7 @@ export const toggleTaskStatusBL = async (id) => {
       model: Task,
       id: id,
       filter: [{ $set: { status: { $not: "$status" } } }],
-      option: { new: true, updatePipeline: true },
+      option: { returnDocument: 'after', updatePipeline: true },
     });
 
     return result;

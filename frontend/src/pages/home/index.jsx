@@ -1,16 +1,39 @@
-import styles from "./styles.module.scss"
+import styles from "./styles.module.scss";
+import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
-  return (
-    <div>
-        <div className={styles.mainBody}>
-            <div className={styles.header}>
-                <h1>Welcome to Task Management App</h1>
-                <p>Manage task all at once</p>
-            </div>
-        </div>
-    </div>
-  )
-}
+  const navigate = useNavigate();
 
-export default Homepage
+  return (
+    <div className={styles.homepage}>
+      
+      
+      {/* Hero Section */}
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <h1>Welcome to Task Management</h1>
+          <p className={styles.tagline}>
+            Organize, prioritize, and accomplish your goals efficiently
+          </p>
+          <div className={styles.ctaButtons}>
+            <button
+              className={styles.btnPrimary}
+              onClick={() => navigate("/login")}
+            >
+              Sign In
+            </button>
+            <button
+              className={styles.btnSecondary}
+              onClick={() => navigate("/tasks")}
+            >
+              View Tasks
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  );
+};
+
+export default Homepage;

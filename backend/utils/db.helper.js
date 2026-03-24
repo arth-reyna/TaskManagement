@@ -14,7 +14,7 @@ export const find = async (data) => {
 
 export const insertOne = async (data) => {
   const { model, filter } = data;
-  const result = await model.insertOne(filter);
+  const result = await model.create(filter);
 
   return result;
 };

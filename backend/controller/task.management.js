@@ -9,7 +9,9 @@ import {
 //Get Tasks
 export const getTasks = async (req, res, next) => {
   try {
-    const result = await getTasksBL();
+    // `authMiddleware` sets `req.userId`
+    const userId = req.userId;
+    const result = await getTasksBL(userId);
 
     return res.status(200).json({
       success: true,
@@ -23,7 +25,7 @@ export const getTasks = async (req, res, next) => {
 export const postTask = async (req, res, next) => {
   try {
     const data = req.body;
-    console.log("Controller Data: ", data);
+    data.createdBy = req.userId;
 
     const result = await postTaskBL(data);
     return res.status(201).json({
@@ -38,7 +40,6 @@ export const postTask = async (req, res, next) => {
 export const deleteTask = async (req, res, next) => {
   try {
     const id = req.params.id;
-    console.log("ID: ",id);
     const result = await deleteTaskBL(id);
 
     return res.status(200).json({
@@ -59,12 +60,12 @@ export const toggleTaskStatus = async (req, res, next) => {
     return res.status(203).json({
       success: true,
       message: "toggled status sucessfully",
-      data: result
-    })
+      data: result,
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
 export const updateTask = async (req, res, next) => {
   try {
@@ -75,9 +76,9 @@ export const updateTask = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Task updated sucessfully",
-      data: result
+      data: result,
     });
   } catch (error) {
     next(error);
   }
-}
+};

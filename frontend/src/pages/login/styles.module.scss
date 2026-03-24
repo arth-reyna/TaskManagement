@@ -1,0 +1,167 @@
+.loginContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+//   background: linear-gradient(135deg, #02343f 0%, #034d63 100%);
+  padding: 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.loginCard {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: 3rem;
+  width: 100%;
+  max-width: 400px;
+  animation: slideUp 0.5s ease-out;
+}
+
+.loginHeader {
+  text-align: center;
+  margin-bottom: 2.5rem;
+
+  h1 {
+    color: #02343f;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    color: #02343f;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  input {
+    padding: 0.85rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background-color: #f9f7f4;
+
+    &:focus {
+      outline: none;
+      border-color: #02343f;
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(2, 52, 63, 0.1);
+    }
+
+    &::placeholder {
+      color: #999;
+    }
+  }
+}
+
+.error {
+  background-color: #fee;
+  color: #c00;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-align: center;
+  border: 1px solid #fcc;
+}
+
+.loginBtn {
+  background-color: #02343f;
+  color: #f0edcc;
+  border: none;
+  padding: 0.95rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+
+  &:hover {
+    background-color: #034d63;
+    box-shadow: 0 4px 12px rgba(2, 52, 63, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+
+  p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.signupLink {
+  background: none;
+  border: none;
+  color: #02343f;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #034d63;
+    text-decoration: underline;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 1rem;
+  }
+
+  .loginCard {
+    padding: 2rem 1.5rem;
+  }
+
+  .loginHeader {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+}

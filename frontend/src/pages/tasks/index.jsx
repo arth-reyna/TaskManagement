@@ -3,6 +3,7 @@ import Button from "../../components/button";
 import TextBox from "../../components/text-box";
 import Modal from "../../components/modal";
 import EditTask from "../../components/edit-form";
+import Navbar from "../../components/navbar/index";
 import styles from "./styles.module.scss";
 
 const Tasks = () => {
@@ -23,6 +24,7 @@ const Tasks = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           title: taskName,
@@ -54,6 +56,7 @@ const Tasks = () => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
 
@@ -77,6 +80,7 @@ const Tasks = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
 
@@ -92,6 +96,7 @@ const Tasks = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
@@ -99,8 +104,6 @@ const Tasks = () => {
 
       const data = await result.json();
       setTasks(data.data);
-
-      console.log("All Tasks: ", tasks);
     };
 
     fetchTasks();
@@ -125,6 +128,7 @@ const Tasks = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(updatedData),
     });
@@ -134,6 +138,7 @@ const Tasks = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const data = await fetchResponse.json();
@@ -153,96 +158,100 @@ const Tasks = () => {
   };
 
   return (
-    <div className={styles.page}>
-      <h1>Add Task</h1>
-      <hr />
-      <div className={styles.form}>
-        <div className={styles.field}>
-          <label htmlFor="task-name">Task Title</label>
-          <TextBox
-            props={{
-              name: "task-name",
-              id: "task-name",
-              styles: styles.input,
-              value: taskName,
-              onchange: (e) => setTaskName(e.target.value),
-            }}
-          />
+    <>
+      {/* <Navbar /> */}
+      <div className={styles.page}>
+        <h1>Add Task</h1>
+        <hr />
+        <div className={styles.form}>
+          <div className={styles.field}>
+            <label htmlFor="task-name">Task Title</label>
+            <TextBox
+              props={{
+                name: "task-name",
+                id: "task-name",
+                styles: styles.input,
+                value: taskName,
+                onchange: (e) => setTaskName(e.target.value),
+              }}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="task-description">Task Description</label>
+            <textarea
+              id="task-description"
+              className={styles.input}
+              value={taskDescription}
+              onChange={(e) => setTaskDescription(e.target.value)}
+            />
+          </div>
+
+          {error && <p className={styles.error}>{error}</p>}
+
+          <Button props={{ text: "Add Task", onClick: handleAddTask }} />
         </div>
 
-        <div className={styles.field}>
-          <label htmlFor="task-description">Task Description</label>
-          <textarea
-            id="task-description"
-            className={styles.input}
-            value={taskDescription}
-            onChange={(e) => setTaskDescription(e.target.value)}
-          />
-        </div>
-
-        {error && <p className={styles.error}>{error}</p>}
-
-        <Button props={{ text: "Add Task", onClick: handleAddTask }} />
-      </div>
-
-      <div className={styles.list}>
-        {tasks.length === 0 ? (
-          <p>No tasks added yet.</p>
-        ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tasks.map((task, idx) => (
-                <tr key={idx}>
-                  <td>{idx + 1}</td>
-                  <td>{task.task_title}</td>
-                  <td>{task.task_description}</td>
-                  <td>{task.status ? "Pending" : "Completed"}</td>
-                  <td className={styles.actions}>
-                    <Button
-                      props={{
-                        text: "Toggle",
-                        onClick: () => handleToggle(idx),
-                      }}
-                    />
-                    <Button
-                      props={{
-                        text: "Edit",
-                        onClick: () => handleEdit(idx),
-                      }}
-                    />
-                    <Button
-                      props={{
-                        text: "Delete",
-                        onClick: () => handleDelete(idx),
-                      }}
-                    />
-                  </td>
+        <div className={styles.list}>
+          {tasks.length === 0 ? (
+            <p>No tasks added yet.</p>
+          ) : (
+            
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+              </thead>
+              <tbody>
+                {tasks.map((task, idx) => (
+                  <tr key={idx}>
+                    <td>{idx + 1}</td>
+                    <td>{task.task_title}</td>
+                    <td>{task.task_description}</td>
+                    <td>{task.status ? "Pending" : "Completed"}</td>
+                    <td className={styles.actions}>
+                      <Button
+                        props={{
+                          text: "Toggle",
+                          onClick: () => handleToggle(idx),
+                        }}
+                      />
+                      <Button
+                        props={{
+                          text: "Edit",
+                          onClick: () => handleEdit(idx),
+                        }}
+                      />
+                      <Button
+                        props={{
+                          text: "Delete",
+                          onClick: () => handleDelete(idx),
+                        }}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
 
-      <Modal isOpen={isEditModalOpen} onClose={handleEditClose}>
-        {editingTaskIdx !== null && (
-          <EditTask
-            task={tasks[editingTaskIdx]}
-            onClose={handleEditClose}
-            onSave={handleEditSave}
-          />
-        )}
-      </Modal>
-    </div>
+        <Modal isOpen={isEditModalOpen} onClose={handleEditClose}>
+          {editingTaskIdx !== null && (
+            <EditTask
+              task={tasks[editingTaskIdx]}
+              onClose={handleEditClose}
+              onSave={handleEditSave}
+            />
+          )}
+        </Modal>
+      </div>
+    </>
   );
 };
 

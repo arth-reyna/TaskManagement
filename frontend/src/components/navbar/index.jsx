@@ -1,7 +1,6 @@
 import Image from "../image";
 import styles from "./styles.module.scss";
 import logo from "../../assets/logo.png";
-import { useState } from "react";
 import Button from "../button";
 import Modal from "../modal";
 import LoginForm from "../login-form/index";
@@ -23,7 +22,7 @@ const Navbar = ({
 
       <div className={styles.rightPanel}>
         {isLoggedIn ? (
-          <p className={styles.username}>Welcome ${email}! </p>
+          <p className={styles.username}>Welcome {email}! </p>
         ) : (
           <Button
             props={{

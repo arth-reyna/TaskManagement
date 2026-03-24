@@ -1,22 +1,24 @@
-export const authMiddleware = async() => {
-    try {
-        const authHeader = req.headers['Authorization'];
-        const token = authHeader.split( )[1];
+import { verify } from "../utils/jwt.js";
 
-        if(!token){
-            return res.status(404).json({
-                success: false,
-                message: "Token not present"
-            })
-        }
+export const authMiddleware = async (req, res, next) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader.split(" ")[1];
 
-        //Verify JWT token
-
-        next();
-    } catch (error) {
-        throw new Error({
-            message: "Auth Middleware Error",
-            error: error
-        })
+    if (!token) {
+      return res.status(404).json({
+        success: false,
+        message: "Token not present",
+      });
     }
-}
+
+    const decoded = await verify(token);
+    req.userId = decoded.id;
+    next();
+  } catch (error) {
+    throw new Error({
+      message: "Invalid or Expired Token",
+      error: error,
+    });
+  }
+};

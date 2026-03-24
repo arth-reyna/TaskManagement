@@ -1,26 +1,237 @@
-.mainBody{
-    display: flex;
-    flex-direction: column;
-    margin: auto;
+.homepage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f0edcc;
+}
 
-    .header{
-        padding: 5rem;
-        border-radius: 40px;
-        text-align: center;
-        background-color: #02343F;
-        
+// Hero Section
+.hero {
+  background: linear-gradient(135deg, #02343f 0%, #034d63 100%);
+  padding: 6rem 2rem;
+  color: #f0edcc;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
 
-        h1{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 60px;
-            padding: 20px;
-            color: #F0EDCC;
-        }
+  .heroContent {
+    max-width: 700px;
+    animation: fadeIn 0.8s ease-in;
 
-        p{
-            font-weight: 400;
-            font-style: italic;
-            color: #F0EDCC;
-        }
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: -1px;
     }
+
+    .tagline {
+      font-size: 1.3rem;
+      font-weight: 300;
+      margin-bottom: 3rem;
+      color: #f0edcc;
+    }
+
+    .ctaButtons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+// Button Styles
+.btnPrimary {
+  background-color: #f0edcc;
+  color: #02343f;
+  border: none;
+  padding: 0.9rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background-color: #fff9e6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btnSecondary {
+  background-color: transparent;
+  color: #f0edcc;
+  border: 2px solid #f0edcc;
+  padding: 0.8rem 2.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #f0edcc;
+    color: #02343f;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btnLarge {
+  @extend .btnPrimary;
+  padding: 1.1rem 3rem;
+  font-size: 1.1rem;
+}
+
+// Features Section
+.features {
+  padding: 4rem 2rem;
+  background-color: #f0edcc;
+  text-align: center;
+
+  h2 {
+    font-size: 2.5rem;
+    color: #02343f;
+    margin-bottom: 3rem;
+    font-weight: 700;
+  }
+
+  .featureGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .featureCard {
+    background-color: #02343f;
+    padding: 2rem;
+    border-radius: 12px;
+    border-left: 5px solid #02343f;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(2, 52, 63, 0.15);
+    }
+
+    .featureIcon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      background-color: #f0edcc;
+      height: 37%;
+      width: 20%;
+      border-radius: 20px;
+    }
+
+    h3 {
+      color: #f0edcc;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    p {
+      color: #f0edcc;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+  }
+}
+
+// CTA Section
+.ctaSection {
+  background: linear-gradient(135deg, #02343f 0%, #034d63 100%);
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #f0edcc;
+
+  h2 {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  button {
+    margin-top: 0.5rem;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .hero {
+    padding: 4rem 1.5rem;
+    min-height: auto;
+
+    .heroContent {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .tagline {
+        font-size: 1rem;
+      }
+
+      .ctaButtons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+  }
+
+  .features {
+    padding: 3rem 1.5rem;
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .featureGrid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .ctaSection {
+    padding: 3rem 1.5rem;
+
+    h2 {
+      font-size: 1.8rem;
+    }
+  }
 }

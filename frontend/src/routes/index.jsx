@@ -1,7 +1,17 @@
 import { roles } from "../constants/roles";
 import About from "../pages/about";
+import LoginPage from "../pages/login";
 import Profile from "../pages/profile";
+import Register from "../pages/register";
 import Tasks from "../pages/tasks";
+
+import { Navigate } from "react-router-dom";
+
+const Logout = () => {
+  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem("userEmail");
+  return <Navigate to="/login" replace />;
+};
 
 export const routesData = [
   {
@@ -16,7 +26,7 @@ export const routesData = [
   },
   {
     path: "logout",
-    element: <h1>logout page</h1>,
+    element: <Logout />,
     role: [roles.user, roles.admin],
   },
   {
@@ -28,5 +38,15 @@ export const routesData = [
     path: "overview",
     element: <h1>Admin Dashboard</h1>,
     role: [roles.admin],
+  },
+  {
+    path: "login",
+    element: <LoginPage />,
+    isPublic: true,
+  },
+  {
+    path: "register",
+    element: <Register />,
+    isPublic: true,
   },
 ];
