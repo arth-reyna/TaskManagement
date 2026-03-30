@@ -1,43 +1,47 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import styles from "./styles.module.scss"
-import styles from "../login/styles.module.scss"
-
+import styles from "../login/styles.module.scss";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
+  const form = useForm();
+  const { formState, register, handleSubmit } = form;
+  const { errors } = formState;
   const [error, setError] = useState("");
-  const [isLoggedIn, setisLoggedIn] = useState(false);
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const handleRegister = async (formData) => {
     setError("");
 
-    if (!email || !password || !name) {
-      setError("Please fill in all fields");
-      return;
+    try {
+      const result = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await result.json().catch(() => null);
+
+      if (!result.ok) {
+        const message =
+          data?.message ||
+          data?.error ||
+          "Registration failed. Please try again.";
+        setError(message);
+        toast.error(message);
+        return;
+      }
+
+      toast.success("Registered successfully!");
+      navigate("/login");
+    } catch {
+      const message = "Registration failed. Please try again.";
+      setError(message);
+      toast.error(message);
     }
-    const result = await fetch("http://localhost:5000/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: name,
-        email: email,
-        password: password,
-      }),
-    });
-
-    if (!result.ok) throw new Error("Error during frontend register");
-    
-    setisLoggedIn(true);
-    navigate("/tasks");
-
-    console.log("Register attempt:", { email, password });
   };
 
   return (
@@ -48,63 +52,73 @@ const Register = () => {
           <p>Sign up</p>
         </div>
 
-        <form onSubmit={handleRegister} className={styles.loginForm}>
+        <form
+          onSubmit={handleSubmit(handleRegister)}
+          className={styles.loginForm}
+        >
           <div className={styles.formGroup}>
             <label htmlFor="name">Name</label>
             <input
-              type="name"
-              name="name"
+              type="text"
               id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="john doe"
-              required
+              {...register("name", {
+                required: "name is required",
+              })}
             />
+
+            <p className={styles.errorClass}>{errors.name?.message}</p>
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="email">Email Address</label>
             <input
               type="email"
-              name="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              required
+              {...register("email", {
+                required: "email is required",
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: "email format is invalid",
+                },
+              })}
             />
+
+            <p className={styles.errorClass}>{errors.email?.message}</p>
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              name="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              minLength={8}
+              {...register("password", {
+                required: "password is required",
+                minLength: {
+                  value: 6,
+                  message: "minimum 6 characters",
+                },
+              })}
             />
+
+            <p className={styles.errorClass}>{errors.password?.message}</p>
           </div>
 
           {error && <div className={styles.error}>{error}</div>}
 
           <button type="submit" className={styles.loginBtn}>
-            Sign In
+            Sign Up
           </button>
         </form>
 
         <div className={styles.footer}>
           <p>
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <button
               type="button"
               className={styles.signupLink}
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
             >
-              Sign up
+              Sign in
             </button>
           </p>
         </div>

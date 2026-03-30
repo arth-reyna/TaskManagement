@@ -1,9 +1,15 @@
 .page {
   padding: 2rem;
 
+  .headerr{
+    display: flex;
+    
+  }
+
   h1 {
     text-align: left  ;
     margin-bottom: 1.5rem;
+    color: #02343F;
   }
 }
 

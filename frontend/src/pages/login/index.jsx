@@ -1,46 +1,56 @@
-import styles from "./styles.module.scss";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import styles from "./styles.module.scss";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { formState, register, handleSubmit, setError, clearErrors } = useForm();
+  const { errors } = formState;
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+  const handleLogin = async (formData) => {
+    clearErrors();
 
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
+    try {
+      const result = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await result.json().catch(() => null);
+
+      if (!result.ok) {
+        const message =
+          data?.message ||
+          data?.error ||
+          "Invalid email or password";
+
+        setError("password", {
+          type: "manual",
+          message,
+        });
+        toast.error(message);
+        return;
+      }
+
+      toast.success("Logged in!");
+      // Store simple auth flag and user details
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userEmail", formData.email);
+      localStorage.setItem("token", data?.data?.token ?? "");
+      localStorage.setItem("userCreatedAt", data?.data?.user?.createdAt ?? "");
+      navigate("/tasks");
+    } catch {
+      const message = "Login failed. Please try again.";
+      toast.error(message);
+      setError("password", {
+        type: "manual",
+        message,
+      });
     }
-    const result = await fetch("http://localhost:5000/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
-
-    const data = await result.json();
-
-    if (!result.ok || !data.success) {
-      setError("Credentials not matched");
-      return;
-    }
-    
-    // Store simple auth flag and user details
-    localStorage.setItem("isAuthenticated", "true");
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("token", data.data.token);
-    
-    navigate("/tasks");
-    console.log("Login attempt:", { email, password });
   };
 
   return (
@@ -51,18 +61,26 @@ const LoginPage = () => {
           <p>Sign in to your account</p>
         </div>
 
-        <form onSubmit={handleLogin} className={styles.loginForm}>
+        <form
+          onSubmit={handleSubmit(handleLogin)}
+          className={styles.loginForm}
+          noValidate
+        >
           <div className={styles.formGroup}>
             <label htmlFor="email">Email Address</label>
             <input
               type="email"
-              name="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              required
+              {...register("email", {
+                required: "email is required",
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: "email format invalid",
+                },
+              })}
             />
+
+            <p className={styles.errorClass}>{errors.email?.message}</p>
           </div>
 
           <div className={styles.formGroup}>
@@ -70,20 +88,22 @@ const LoginPage = () => {
             <input
               type="password"
               name="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              minLength={8}
+              {...register("password", {
+                required: "password is required",
+                minLength: {
+                  value: 6,
+                  message: "min 6 characters required",
+                },
+              })}
             />
-          </div>
 
-          {error && <div className={styles.error}>{error}</div>}
+            <p className={styles.errorClass}>{errors.password?.message}</p>
+          </div>
 
           <button type="submit" className={styles.loginBtn}>
             Sign In
           </button>
+
         </form>
 
         <div className={styles.footer}>
@@ -99,6 +119,10 @@ const LoginPage = () => {
           </p>
         </div>
       </div>
+
+        {/* <div className={styles.loginCard}>
+          <Counter />
+        </div> */}
     </div>
   );
 };

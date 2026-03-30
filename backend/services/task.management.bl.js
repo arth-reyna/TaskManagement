@@ -13,6 +13,7 @@ export const getTasksBL = async (userId) => {
       filter: { createdBy: userId },
     });
 
+    console.log("Data: ", data);
     return data;
   } catch (error) {
     throw new Error(error.message);
@@ -60,7 +61,7 @@ export const toggleTaskStatusBL = async (id) => {
       model: Task,
       id: id,
       filter: [{ $set: { status: { $not: "$status" } } }],
-      option: { returnDocument: 'after', updatePipeline: true },
+      option: { returnDocument: "after", updatePipeline: true },
     });
 
     return result;
@@ -79,7 +80,7 @@ export const updateTaskBL = async (id, data) => {
       filter: {
         task_title: title,
         task_description: description,
-        },
+      },
     });
     console.log(result);
     if (!result) throw new Error("Unable to update details");
@@ -90,5 +91,22 @@ export const updateTaskBL = async (id, data) => {
       message: "Error updating details",
       error: error,
     });
+  }
+};
+
+export const dashboardBL = async (id) => {
+  try {
+    const tasks = await find({
+      model: Task,
+      filter: { createdBy: id },
+    });
+
+    const totalTasks = tasks.length;
+    const activeTasks = tasks.filter((task) => task.status === true).length;
+    const inActiveTasks = tasks.filter((task) => task.status === false).length;
+
+    return { totalTasks, activeTasks, inActiveTasks };
+  } catch (error) {
+    throw new Error(error.message);
   }
 };

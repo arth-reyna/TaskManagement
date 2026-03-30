@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-//   background: linear-gradient(135deg, #02343f 0%, #034d63 100%);
+  //   background: linear-gradient(135deg, #02343f 0%, #034d63 100%);
   padding: 2rem;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -75,15 +75,6 @@
   }
 }
 
-.error {
-  background-color: #fee;
-  color: #c00;
-  padding: 0.75rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  text-align: center;
-  border: 1px solid #fcc;
-}
 
 .loginBtn {
   background-color: #02343f;
@@ -137,31 +128,6 @@
   }
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 480px) {
-  .loginContainer {
-    padding: 1rem;
-  }
-
-  .loginCard {
-    padding: 2rem 1.5rem;
-  }
-
-  .loginHeader {
-    margin-bottom: 2rem;
-
-    h1 {
-      font-size: 1.5rem;
-    }
-  }
+.errorClass {
+  color: red;
 }

@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  dashboard,
   deleteTask,
   getTasks,
   postTask,
@@ -19,5 +20,6 @@ router.patch("/task/:id", authMiddleware, toggleTaskStatus);
 router.put("/task/:id", authMiddleware, updateTask);
 router.post("/login", login);
 router.post("/register", register);
+router.get("/overview", authMiddleware, dashboard);
 
 export default router;

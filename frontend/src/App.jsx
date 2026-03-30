@@ -4,11 +4,14 @@ import { routesData } from "./routes";
 import MainLayout from "./pages/main-layout";
 import Homepage from "./pages/home";
 import ProtectedRoute from "./components/protected-route";
+import { ToastContainer } from "react-toastify";
+
 
 const App = () => {
   return (
     <BrowserRouter>
       <ErrorBoundary>
+        <ToastContainer position="top-right" autoClose={2500} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Homepage />} />

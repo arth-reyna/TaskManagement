@@ -1,0 +1,26 @@
+.page {
+  min-height: 100%;
+  padding: 24px;
+  background-color: #f0edcc;
+}
+
+.card {
+  max-width: 520px;
+  background-color: #02343f;
+  color: #f0edcc;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.card h1 {
+  margin: 0 0 16px;
+  font-size: 26px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #f0edcc;
+}

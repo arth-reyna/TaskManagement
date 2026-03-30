@@ -1,0 +1,42 @@
+.container {
+  min-height: 100%;
+  padding: 24px;
+  background-color: #f0edcc;
+  color: #02343F;
+}
+
+.header {
+  margin-bottom: 18px;
+
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #02343F;
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background-color: #02343F;
+  color: #f0edcc;
+  border: 1px solid #02343F;
+  border-radius: 10px;
+  padding: 16px;
+
+  h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+  }
+}

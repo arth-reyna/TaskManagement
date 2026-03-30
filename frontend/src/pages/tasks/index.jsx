@@ -3,7 +3,6 @@ import Button from "../../components/button";
 import TextBox from "../../components/text-box";
 import Modal from "../../components/modal";
 import EditTask from "../../components/edit-form";
-import Navbar from "../../components/navbar/index";
 import styles from "./styles.module.scss";
 
 const Tasks = () => {
@@ -13,6 +12,7 @@ const Tasks = () => {
   const [error, setError] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingTaskIdx, setEditingTaskIdx] = useState(null);
+  const [search, setSearch] = useState("");
 
   const handleAddTask = async () => {
     try {
@@ -119,6 +119,7 @@ const Tasks = () => {
     setEditingTaskIdx(null);
   };
 
+
   const handleEditSave = async (updatedData) => {
     const taskToEdit = tasks[editingTaskIdx];
     const taskId = taskToEdit._id;
@@ -143,17 +144,6 @@ const Tasks = () => {
     });
     const data = await fetchResponse.json();
     setTasks(data.data);
-    // setTasks((prev) =>
-    //   prev.map((task, i) =>
-    //     i === editingTaskIdx
-    //       ? {
-    //           ...task,
-    //           title: updatedData.title,
-    //           description: updatedData.description,
-    //         }
-    //       : task,
-    //   ),
-    // );
     handleEditClose();
   };
 
@@ -162,6 +152,7 @@ const Tasks = () => {
       {/* <Navbar /> */}
       <div className={styles.page}>
         <h1>Add Task</h1>
+        
         <hr />
         <div className={styles.form}>
           <div className={styles.field}>

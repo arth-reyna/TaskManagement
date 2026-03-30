@@ -31,7 +31,6 @@ const Homepage = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };

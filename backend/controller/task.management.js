@@ -1,4 +1,5 @@
 import {
+  dashboardBL,
   deleteTaskBL,
   getTasksBL,
   postTaskBL,
@@ -9,7 +10,6 @@ import {
 //Get Tasks
 export const getTasks = async (req, res, next) => {
   try {
-    // `authMiddleware` sets `req.userId`
     const userId = req.userId;
     const result = await getTasksBL(userId);
 
@@ -82,3 +82,19 @@ export const updateTask = async (req, res, next) => {
     next(error);
   }
 };
+
+export const dashboard = async (req, res, next) => {
+  try {
+    const id = req.userId
+    console.log("controller id: ",id);
+    const result = await dashboardBL(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "fetched dashboard",
+      data: result
+    })
+  } catch (error) {
+    next(error); 
+  }
+}

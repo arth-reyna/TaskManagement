@@ -1,5 +1,6 @@
 import { roles } from "../constants/roles";
 import About from "../pages/about";
+import Dashboard from "../pages/dashboard";
 import LoginPage from "../pages/login";
 import Profile from "../pages/profile";
 import Register from "../pages/register";
@@ -36,7 +37,7 @@ export const routesData = [
   },
   {
     path: "overview",
-    element: <h1>Admin Dashboard</h1>,
+    element: < Dashboard   />,
     role: [roles.admin],
   },
   {
