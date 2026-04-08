@@ -15,7 +15,7 @@ const Register = () => {
     setError("");
 
     try {
-      const result = await fetch("http://localhost:5000/api/register", {
+      const result = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

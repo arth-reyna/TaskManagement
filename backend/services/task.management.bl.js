@@ -13,7 +13,6 @@ export const getTasksBL = async (userId) => {
       filter: { createdBy: userId },
     });
 
-    console.log("Data: ", data);
     return data;
   } catch (error) {
     throw new Error(error.message);
@@ -41,7 +40,6 @@ export const postTaskBL = async (data) => {
 
 export const deleteTaskBL = async (id) => {
   try {
-    console.log("BL ID DELETE: ", id);
     const result = await findByIdAndDelete({
       model: Task,
       filter: { _id: id },
@@ -82,7 +80,6 @@ export const updateTaskBL = async (id, data) => {
         task_description: description,
       },
     });
-    console.log(result);
     if (!result) throw new Error("Unable to update details");
 
     return result;

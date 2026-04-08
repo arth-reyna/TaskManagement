@@ -1,19 +1,19 @@
 .page {
   padding: 2rem;
 
-  .headerr{
+  .headerr {
     display: flex;
-    
   }
 
   h1 {
-    text-align: left  ;
+    text-align: left;
     margin-bottom: 1.5rem;
-    color: #02343F;
+    color: #02343f;
   }
 }
 
-.form {margin-top: 10px;
+.form {
+  margin-top: 10px;
   max-width: 500px;
   margin-bottom: 2rem;
 
@@ -43,25 +43,40 @@
   }
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-  }
-
-  th {
-    color: #fff;
-    background-color: #02343F
-  }
+.list {
+  margin-top: 2rem;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .actions {
   display: flex;
-  gap: 6px;
-  justify-content: center;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+
+  button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+
+    &:first-child {
+      background: linear-gradient(135deg, #02343f, #024a58);
+      color: #f0edcc;
+    }
+
+    &:nth-child(2) {
+      background: linear-gradient(135deg, #f0edcc, #e8e5c4);
+      color: #02343f;
+    }
+
+    &:nth-child(3) {
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      color: #ffffff;
+    }
+  }
 }

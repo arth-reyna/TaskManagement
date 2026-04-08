@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { toast } from "react-toastify";
+import { httpPost } from "../../services/httpPost";
+import { LOGIN_URL } from "../../constants/config";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -10,46 +12,20 @@ const LoginPage = () => {
 
   const handleLogin = async (formData) => {
     clearErrors();
-
     try {
-      const result = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await result.json().catch(() => null);
-
-      if (!result.ok) {
-        const message =
-          data?.message ||
-          data?.error ||
-          "Invalid email or password";
-
-        setError("password", {
-          type: "manual",
-          message,
-        });
-        toast.error(message);
-        return;
-      }
+      const data = await httpPost(LOGIN_URL, formData);
 
       toast.success("Logged in!");
-      // Store simple auth flag and user details
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("userEmail", formData.email);
       localStorage.setItem("token", data?.data?.token ?? "");
       localStorage.setItem("userCreatedAt", data?.data?.user?.createdAt ?? "");
       navigate("/tasks");
-    } catch {
-      const message = "Login failed. Please try again.";
+      
+    } catch (error) {
+      const message = error.message || "Login failed. Please try again.";
       toast.error(message);
-      setError("password", {
-        type: "manual",
-        message,
-      });
+      setError("password", { type: "manual", message });
     }
   };
 
@@ -79,8 +55,7 @@ const LoginPage = () => {
                 },
               })}
             />
-
-            <p className={styles.errorClass}>{errors.email?.message}</p>
+            <p className={styles.errorClascs}>{errors.email?.message}</p>
           </div>
 
           <div className={styles.formGroup}>
@@ -96,14 +71,12 @@ const LoginPage = () => {
                 },
               })}
             />
-
             <p className={styles.errorClass}>{errors.password?.message}</p>
           </div>
 
           <button type="submit" className={styles.loginBtn}>
             Sign In
           </button>
-
         </form>
 
         <div className={styles.footer}>
@@ -119,10 +92,6 @@ const LoginPage = () => {
           </p>
         </div>
       </div>
-
-        {/* <div className={styles.loginCard}>
-          <Counter />
-        </div> */}
     </div>
   );
 };

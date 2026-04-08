@@ -4,7 +4,7 @@ const Profile = () => {
   const email = localStorage.getItem("userEmail") || "-";
   const createdAtRaw = localStorage.getItem("userCreatedAt");
   const createdAt = createdAtRaw
-    ? new Date(createdAtRaw).toLocaleString()
+  ? new Date(createdAtRaw).toLocaleString()
     : "-";
 
   return (

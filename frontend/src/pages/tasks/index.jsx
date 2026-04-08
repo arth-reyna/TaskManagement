@@ -4,15 +4,39 @@ import TextBox from "../../components/text-box";
 import Modal from "../../components/modal";
 import EditTask from "../../components/edit-form";
 import styles from "./styles.module.scss";
+import {
+  Table,
+  Header,
+  HeaderRow,
+  Body,
+  Row,
+  HeaderCell,
+  Cell,
+} from "@table-library/react-table-library/table";
+import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "@table-library/react-table-library/theme";
+import {
+  getAllTasks,
+  addTasks,
+  deleteTasks,
+  updateTasks,
+  toggleTasks,
+} from "../../redux/features/tasks/tasksAsyncAction";
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState([]);
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [error, setError] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingTaskIdx, setEditingTaskIdx] = useState(null);
-  const [search, setSearch] = useState("");
+
+  const dispatch = useDispatch();
+  const { data: tasksData, isLoading } = useSelector((state) => state.tasks);
+  const tasks = Array.isArray(tasksData) ? tasksData : [];
+
+  useEffect(() => {
+    dispatch(getAllTasks());
+  }, [dispatch]);
 
   const handleAddTask = async () => {
     try {
@@ -20,26 +44,13 @@ const Tasks = () => {
         setError("Title must be > 4 chars and description > 10 chars.");
         return;
       }
-      const result = await fetch("http://localhost:5000/api/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
+      dispatch(
+        addTasks({
           title: taskName,
           description: taskDescription,
           status: true,
         }),
-      });
-
-      if (!result.ok) throw new Error("HTTP Error");
-
-      const data = await result.json();
-      console.log("data: ", data);
-      console.log("Tasks: ", tasks);
-      setTasks((prev) => [...prev, data.data]);
-
+      );
       setTaskName("");
       setTaskDescription("");
       setError(null);
@@ -49,65 +60,29 @@ const Tasks = () => {
   };
 
   const handleToggle = async (idx) => {
-    const taskToToggle = tasks[idx];
-    const id = taskToToggle._id;
+    try {
+      const taskToToggle = tasks[idx];
+      const id = taskToToggle._id;
 
-    const result = await fetch(`http://localhost:5000/api/task/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    if (!result.ok) throw new Error("Error Updating Status");
-
-    const data = await result.json();
-    console.log("data: ", data);
-
-    setTasks((prev) =>
-      prev.map((task, i) =>
-        i === idx ? { ...task, status: !task.status } : task,
-      ),
-    );
+      await dispatch(toggleTasks(id)).unwrap();
+      setError(null);
+      dispatch(getAllTasks());
+    } catch (error) {
+      setError(error?.message || "Error Updating Status");
+    }
   };
 
   const handleDelete = async (idx) => {
-    const taskToDelete = tasks[idx];
-    const taskId = taskToDelete._id;
+    try {
+      const taskToDelete = tasks[idx];
+      const taskId = taskToDelete._id;
 
-    const result = await fetch(`http://localhost:5000/api/task/${taskId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    if (!result.ok) throw new Error("Unable to Delete Task");
-
-    setTasks((prev) => prev.filter((_, i) => i !== idx));
-    setError(null);
+      await dispatch(deleteTasks(taskId)).unwrap();
+      setError(null);
+    } catch (error) {
+      setError(error?.message || "Unable to delete task.");
+    }
   };
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const result = await fetch("http://localhost:5000/api/tasks", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (!result.ok) throw new Error("Unable to fetch tasks");
-
-      const data = await result.json();
-      setTasks(data.data);
-    };
-
-    fetchTasks();
-  }, []);
 
   const handleEdit = (idx) => {
     setEditingTaskIdx(idx);
@@ -119,41 +94,62 @@ const Tasks = () => {
     setEditingTaskIdx(null);
   };
 
-
   const handleEditSave = async (updatedData) => {
-    const taskToEdit = tasks[editingTaskIdx];
-    const taskId = taskToEdit._id;
-    console.log("Edit Task ID: ", taskId);
+    try {
+      const taskToEdit = tasks[editingTaskIdx];
+      const taskId = taskToEdit._id;
 
-    const result = await fetch(`http://localhost:5000/api/task/${taskId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(updatedData),
-    });
-    if (!result.ok) throw new Error("Unable to update task details");
-
-    const fetchResponse = await fetch("http://localhost:5000/api/tasks", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    const data = await fetchResponse.json();
-    setTasks(data.data);
-    handleEditClose();
+      await dispatch(updateTasks({ id: taskId, data: updatedData })).unwrap();
+      setError(null);
+      dispatch(getAllTasks());
+      handleEditClose();
+    } catch (error) {
+      setError(error?.message || "Unable to update task details");
+    }
   };
+
+  const theme = useTheme({
+    Table: `
+      --data-table-library_grid-template-columns: 60px 1fr 2fr 120px 280px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(2,52,63,0.12), 0 1px 2px rgba(2,52,63,0.24);
+    `,
+    HeaderRow: `background-color: #02343f`,
+    HeaderCell: `
+      padding: 24px 16px;
+      color: #f0edcc;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.80rem;
+      letter-spacing: 1px;
+      border-bottom: none;
+      cursor: pointer;
+    `,
+    Row: `
+      background-color: #ffffff;
+      border-bottom: 1px solid rgba(2,52,63,0.08);
+      &:nth-of-type(even) { background-color: rgba(240,237,204,0.15); }
+      &:last-of-type { border-bottom: none; }
+      &:hover { background-color: rgba(2,52,63,0.04); }
+    `,
+    Cell: `
+      padding: 20px 16px;
+      color: #02343f;
+      font-size: 0.95rem;
+      font-weight: 400;
+      line-height: 1.5;
+    `,
+  });
 
   return (
     <>
-      {/* <Navbar /> */}
       <div className={styles.page}>
         <h1>Add Task</h1>
-        
         <hr />
+
         <div className={styles.form}>
           <div className={styles.field}>
             <label htmlFor="task-name">Task Title</label>
@@ -184,51 +180,59 @@ const Tasks = () => {
         </div>
 
         <div className={styles.list}>
-          {tasks.length === 0 ? (
+          {isLoading ? (
+            <p>Loading tasks...</p>
+          ) : tasks.length === 0 ? (
             <p>No tasks added yet.</p>
           ) : (
-            
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tasks.map((task, idx) => (
-                  <tr key={idx}>
-                    <td>{idx + 1}</td>
-                    <td>{task.task_title}</td>
-                    <td>{task.task_description}</td>
-                    <td>{task.status ? "Pending" : "Completed"}</td>
-                    <td className={styles.actions}>
-                      <Button
-                        props={{
-                          text: "Toggle",
-                          onClick: () => handleToggle(idx),
-                        }}
-                      />
-                      <Button
-                        props={{
-                          text: "Edit",
-                          onClick: () => handleEdit(idx),
-                        }}
-                      />
-                      <Button
-                        props={{
-                          text: "Delete",
-                          onClick: () => handleDelete(idx),
-                        }}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <Table data={{ nodes: tasks }} theme={theme}>
+              {(tableList) => (
+                <>
+                  <Header>
+                    <HeaderRow>
+                      <HeaderCell>ID</HeaderCell>
+                      <HeaderCell>Title</HeaderCell>
+                      <HeaderCell>Description</HeaderCell>
+                      <HeaderCell>Status</HeaderCell>
+                      <HeaderCell>Action</HeaderCell>
+                    </HeaderRow>
+                  </Header>
+
+                  <Body>
+                    {tableList.map((task, idx) => (
+                      <Row key={task._id} item={task}>
+                        <Cell>{idx + 1}</Cell>
+                        <Cell>{task.task_title}</Cell>
+                        <Cell>{task.task_description}</Cell>
+                        <Cell>{task.status ? "Pending" : "Completed"}</Cell>
+                        <Cell>
+                          <div className={styles.actions}>
+                            <Button
+                              props={{
+                                text: "Toggle",
+                                onClick: () => handleToggle(idx),
+                              }}
+                            />
+                            <Button
+                              props={{
+                                text: "Edit",
+                                onClick: () => handleEdit(idx),
+                              }}
+                            />
+                            <Button
+                              props={{
+                                text: "Delete",
+                                onClick: () => handleDelete(idx),
+                              }}
+                            />
+                          </div>
+                        </Cell>
+                      </Row>
+                    ))}
+                  </Body>
+                </>
+              )}
+            </Table>
           )}
         </div>
 
